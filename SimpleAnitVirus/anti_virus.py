@@ -1,0 +1,1 @@
+print("Simple Anti Virus Project")
