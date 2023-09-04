@@ -76,7 +76,5 @@ else:
 
 
 
-
-
 # Example usage:
 monitor_powershell()
