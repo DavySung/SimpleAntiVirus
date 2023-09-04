@@ -1,5 +1,6 @@
 from tkinter import *
 import customtkinter
+import psutil
 
 customtkinter.set_appearance_mode("light")
 class App(customtkinter.CTk):
@@ -25,8 +26,6 @@ class App(customtkinter.CTk):
         
         self.button5 = customtkinter.CTkButton(self, text="Web Filter", command=self.button_callback)
         self.button5.grid(row=1, column=5, padx=5, pady=10, sticky="ew")
-        
-
 
     def button_callback(self):
         print("button pressed")
