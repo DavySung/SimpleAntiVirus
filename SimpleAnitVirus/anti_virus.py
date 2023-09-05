@@ -1,5 +1,7 @@
 from tkinter import *
 import customtkinter
+import psutil
+import subprocess
 
 customtkinter.set_appearance_mode("light")
 class App(customtkinter.CTk):
