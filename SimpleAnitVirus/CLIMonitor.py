@@ -78,16 +78,5 @@ def start_monitoring_code():
     # Use subprocess to run the anti_virus.py script
     subprocess.Popen(["python", "anti_virus.py"])
 
-# Create a tkinter window
-root = tk.Tk()
-root.title("CLI Monitor")
-
-# button to monitor code
-start_monitoring_button = tk.Button(root, text="Start Monitoring", command=start_monitoring_code)
-start_monitoring_button.pack()
-
-# main tkinter event loop
-root.mainloop()
-
 # Example usage:
 monitor_powershell()
