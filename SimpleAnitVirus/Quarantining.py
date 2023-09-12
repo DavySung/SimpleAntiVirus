@@ -1,53 +1,50 @@
 import os
+import shutil
+import stat
 
-def Main():
+from pkg_resources._vendor.more_itertools import strip
 
-    dir_name = "quarantine"
-    aPath = input("Please enter file location address (including file extension): ")
-    aPath = aPath.rsplit("\", 1)
-    filedir = aPath[0]
-    filename = aPath[1]
-    print(filedir + filename)
-    #quarantine(aPath)
 
-    # #Delete or restore file
-    # choice = input("Would you like to (D)elete or (R)estore?: ")
+def main():
+    apath = input("Please enter file location address (including file extension): ")
+    apath = apath.rsplit('\\', 1)
+    filedir = apath[0]
+    filename = apath[1]
+    quarantine(filedir, filename)
 
-    # if choice == 'D':
-        # file_path = #Read file path from text file
-        # os.remove(file_path)
 
-    # elif choice == 'R':
-        # with open('quar_id.txt') as f:
-            # quar_id = f.readline()
-        # restore_from_quar(quar_id)
-        # print ("Done.")
+def quarantine(pfiledir, pfilename):
+    dir_name = "Quarantine"
+    f = open('quarantine.txt', 'w')
+    f.write(pfilename + ', ' + pfiledir)
+    f.close()
+    shutil.move(pfiledir + '\\' + pfilename, dir_name)
 
-    # else: 
-        # print ("No valid option selected, closing...")
-        
-# def quarantine(pPath):
 
-    # f = open('quar_id.txt','w')
-    # f.write(pPath)
-    # f.close()
-    # #os.chdir(dir_name)
-    # shutil.move(pPath,dir_name+'/'+file)
-    
-# def restore(quar_id):
+def restore(psource_name, pdest_name):
+    shutil.move(psource_name, pdest_name)
 
-    # os.chdir(dir_name)
-    # myfile = os.listdir(dir_name)
-    # file = str(myfile)
-    # file = file[2:-2]
-    # shutil.quarantine(file,quar_id+'/'+file)
 
-    # #Change permissions
-    # os.chmod(r'C:\Users\p\Documents\program\sample.txt', 0o777)
-    # print('file can be read, write and execute for owner, group and others')
+main()
+# Delete or restore file
+choice = input("Would you like to (D)elete or (R)estore?: ")
 
-    # os.chmod(r'C:\Users\p\Documents\program\sample.txt', 0o400)
-    # print('file can be read only for owner')
+with open('Quarantine.txt') as f:
+    filename = f.readline()
+    filename = filename.split(',')
 
-    # os.chmod(r'C:\Users\p\Documents\program\sample.txt', 0o600)
-    # print('file can be read and write only for owner')
+if choice == 'D':
+    file_path = 'Quarantine\\' + filename[0]
+    os.remove(file_path)
+    print("Deleted.")
+elif choice == 'R':
+    os.chdir('Quarantine')
+    path = os.getcwd()
+    source_name = path + '\\' + filename[0]
+    dest_name = filename[1].rsplit('\\', 1)
+    os.chdir(dest_name[0].strip())
+    restore(source_name, dest_name[1])
+    print("Restored.")
+
+else:
+    print("No valid option selected, closing...")
