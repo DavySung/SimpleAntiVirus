@@ -1,16 +1,15 @@
 import os
 import shutil
-import stat
-
-from pkg_resources._vendor.more_itertools import strip
+import subprocess
+from tkinter import *
 
 
 def main():
     apath = input("Please enter file location address (including file extension): ")
     apath = apath.rsplit('\\', 1)
     filedir = apath[0]
-    filename = apath[1]
-    quarantine(filedir, filename)
+    fname = apath[1]
+    quarantine(filedir, fname)
 
 
 def quarantine(pfiledir, pfilename):
@@ -19,6 +18,7 @@ def quarantine(pfiledir, pfilename):
     f.write(pfilename + ', ' + pfiledir)
     f.close()
     shutil.move(pfiledir + '\\' + pfilename, dir_name)
+    subprocess.check_output(['icacls.exe', dir_name + '\\' + pfilename, '/deny', 'everyone:(f)'], stderr=subprocess.STDOUT)
 
 
 def restore(psource_name, pdest_name):
@@ -32,6 +32,8 @@ choice = input("Would you like to (D)elete or (R)estore?: ")
 with open('Quarantine.txt') as f:
     filename = f.readline()
     filename = filename.split(',')
+
+subprocess.check_output(['icacls.exe', 'Quarantine\\' + filename[0], '/GRANT', 'everyone:(f)'], stderr=subprocess.STDOUT)
 
 if choice == 'D':
     file_path = 'Quarantine\\' + filename[0]
