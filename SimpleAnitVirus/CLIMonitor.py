@@ -1,9 +1,7 @@
 import psutil
 import subprocess
 import tkinter as tk
-
-# Define a list of known malicious domains
-malicious_domains = ["malicious.com", "example.com"]
+from Malicious_database import malicious_domains
 
 def is_suspicious(cmdline):
     # Convert the command line to lowercase for case-insensitive matching
