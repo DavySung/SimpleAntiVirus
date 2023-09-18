@@ -1,4 +1,5 @@
 import hashlib
+import os
 
 # HashedFile: HashLib
 # Hash(FilePath: string)
@@ -30,9 +31,10 @@ class HashFile:
     def CheckHash(self, output1, output2):
         if(output1 == output2):
             print("Both Hash is the same", output1, output2)
+            return True
         else:
             print("Different Hash")
-            
+            return False
 
     def StoreFile(self, fileName, text):
         flag = False
