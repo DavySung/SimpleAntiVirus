@@ -1,12 +1,13 @@
 import psutil
 import subprocess
 import tkinter as tk
-# from Malicious_database import malicious_domains
 
 def is_suspicious(cmdline):
     # Convert the command line to lowercase for case-insensitive matching
     cmdline_lower = cmdline.lower()
-    known_mal_domains = "scan_known_malware/malicious_domains.txt"
+
+    # Scans in known malicious domains into array
+    known_mal_domains = "SimpleAnitVirus/scan_known_malware/malicious_domains.txt"
     with open(known_mal_domains, 'r') as file:
         malicious_domains = [line.strip() for line in file]
 
@@ -49,9 +50,6 @@ def is_suspicious(cmdline):
     for indicator in contextual_indicators:
         if indicator.lower() in cmdline_lower:
             return True
-
-    # Behavioral analysis checks (e.g., unusual command combinations)
-    # Add more behavioral checks here
 
     # If none of the above criteria match, consider it not suspicious
     return False
