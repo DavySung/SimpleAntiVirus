@@ -1,11 +1,14 @@
 import psutil
 import subprocess
 import tkinter as tk
-from Malicious_database import malicious_domains
+# from Malicious_database import malicious_domains
 
 def is_suspicious(cmdline):
     # Convert the command line to lowercase for case-insensitive matching
     cmdline_lower = cmdline.lower()
+    known_mal_domains = "scan_known_malware/malicious_domains.txt"
+    with open(known_mal_domains, 'r') as file:
+        malicious_domains = [line.strip() for line in file]
 
     # Suspicious keywords and phrases
     suspicious_keywords = ["Invoke-Expression", "Base64", "DownloadString"]
