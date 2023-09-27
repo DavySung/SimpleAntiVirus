@@ -17,7 +17,7 @@ class HashFile:
     def _init_(self, fileName):
         self.fileName = fileName
 
-    def hash_file(self, hash_obj):
+    def hash_file(self, filename, hash_obj):
         with open(self.fileName, 'rb') as file:
             while True:
                 chunk = file.read(4096)
@@ -96,9 +96,9 @@ class HashFile:
                             file.write(text)
                             file.write("\n")
                             msg += 'File is stored'
-                result_window.label = customtkinter.CTkLabel(result_window, text=msg, fg_color="transparent")
-                result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
-                result_window.mainloop()
+            result_window.label = customtkinter.CTkLabel(result_window, text=msg, fg_color="transparent")
+            result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
+            result_window.mainloop()
         except:
             logging.exception("Exception in check hash")
 

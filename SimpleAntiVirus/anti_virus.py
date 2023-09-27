@@ -42,11 +42,11 @@ class App(customtkinter.CTk):
         if file_path:
             file = HashFile()
             file.fileName = self.filename
-            sha256_output = file.hash_file(hashlib.sha256()) 
+            sha256_output = file.hash_file(self.filename, hashlib.sha256()) 
             sha256.set(sha256_output)
-            md5_output = file.hash_file(hashlib.md5()) 
+            md5_output = file.hash_file(self.filename, hashlib.md5()) 
             md5.set(md5_output)
-            sha1_output = file.hash_file(hashlib.sha1()) 
+            sha1_output = file.hash_file(self.filename, hashlib.sha1()) 
             sha1.set(sha1_output)
 
     def hashWindow(self):
@@ -70,7 +70,7 @@ class App(customtkinter.CTk):
         #hashfile1
         new_window.f1Lbl = customtkinter.CTkLabel(new_window, textvariable=file1, width=100)
         new_window.f1Lbl.grid(row=0, column=0, padx=5, pady=10, sticky="ew")
-        f1.set("Open File 1 or enter the hash below")
+        file1.set("Open File 1 or enter the hash below")
 
         new_window.f1HashLbl3 = customtkinter.CTkLabel(new_window, text="Sha256 : ", width=100)
         new_window.f1HashLbl3.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
@@ -94,7 +94,7 @@ class App(customtkinter.CTk):
         new_window.openF1.grid(row=4, column=3, padx=5, pady=10, sticky="ew")
        
         #hashfile2
-        new_window.f2Lbl = customtkinter.CTkLabel(new_window, textvariable=f2, width=100)
+        new_window.f2Lbl = customtkinter.CTkLabel(new_window, textvariable=file2, width=100)
         new_window.f2Lbl.grid(row=5, column=0, padx=5, pady=10, sticky="ew")
         file2.set("Open File 2 or enter the hash below")
 
