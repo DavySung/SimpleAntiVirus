@@ -7,7 +7,6 @@ def install_libraries():
             libraries = [line.strip() for line in requirements_file.readlines()]
 
         for library in libraries:
-            subprocess.check_call(['pip', 'install', library])
             subprocess.check_call(['pip', 'install', '--upgrade', library])
 
 
