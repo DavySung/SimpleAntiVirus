@@ -1,4 +1,5 @@
 import hashlib
+import subprocess
 from tkinter import *
 import customtkinter
 from filehash import HashFile
@@ -140,6 +141,7 @@ class App(customtkinter.CTk):
 
         self.withdraw()
 
+subprocess.Popen(["python", "SimpleAntiVirus/CLIMonitor.py"])
 app = App()
 app.mainloop()
 

