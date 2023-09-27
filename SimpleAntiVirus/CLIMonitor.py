@@ -2,6 +2,7 @@ import psutil
 import time
 import subprocess
 import tkinter as tk
+from plyer import notification
 
 def is_suspicious(cmdline):
     # Convert the command line to lowercase for case-insensitive matching
@@ -81,8 +82,16 @@ while True:
                 process = psutil.Process(pid)
                 cmd_line = combine_list_elements(process.cmdline())
                 if cmd_line and is_suspicious(cmd_line):
-                    print("New suspicious CLI processes detected:")
-                    print(f"Process ID: {pid}, Command: {' '.join(process.cmdline())}")
+                    # print("New suspicious CLI processes detected:")
+                    title = "New suspicious CLI processes detected:"
+                    # print(f"Process ID: {pid}, Command: {' '.join(process.cmdline())}")
+                    message = f"Process ID: {pid}, Command: {' '.join(process.cmdline())}"
+                    notification.notify(
+                        title=title,
+                        message=message,
+                        app_name="SimpleAntivirus",  # Optional, specify your app name
+                        timeout=10  # The notification will automatically close after 10 seconds
+                    )
             except psutil.NoSuchProcess:
                 pass
 
