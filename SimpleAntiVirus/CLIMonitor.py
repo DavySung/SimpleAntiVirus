@@ -5,12 +5,21 @@ import tkinter as tk
 from plyer import notification
 
 active = True
-notification.notify(
-                        title="CLI Monitor",
-                        message="CLI Monitor Is now active",
-                        app_name="SimpleAntivirus",
-                        timeout=10
-                    )
+
+if active:
+    notification.notify(
+                            title="CLI Monitor",
+                            message="CLI Monitor Is now active",
+                            app_name="SimpleAntivirus",
+                            timeout=10
+                        )
+else:
+    notification.notify(
+                            title="CLI Monitor",
+                            message="CLI Monitor Is no longer active",
+                            app_name="SimpleAntivirus",
+                            timeout=10
+                        )
 
 def is_suspicious(cmdline):
     # Convert the command line to lowercase for case-insensitive matching
