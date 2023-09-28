@@ -87,11 +87,11 @@ class CLIMonitor:
 
     def monitor_processes(self):
         # Store the initial list of running command and PowerShell processes
-        initial_processes = set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if is_command_or_powershell(p.info['name']))
+        initial_processes = set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if self.is_command_or_powershell(p.info['name']))
 
         while self.active:
             # Get the list of currently running command and PowerShell processes
-            current_processes = set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if is_command_or_powershell(p.info['name']))
+            current_processes = set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if self.is_command_or_powershell(p.info['name']))
 
             # Find new processes
             new_processes = current_processes - initial_processes
@@ -101,8 +101,8 @@ class CLIMonitor:
                 for pid in new_processes:
                     try:
                         process = psutil.Process(pid)
-                        cmd_line = combine_list_elements(process.cmdline())
-                        if cmd_line and is_suspicious(cmd_line):
+                        cmd_line = self.combine_list_elements(process.cmdline())
+                        if cmd_line and self.is_suspicious(cmd_line):
                             title = "New suspicious CLI processes detected:"
                             message = f"Process ID: {pid}, Command: {' '.join(process.cmdline())}"
                             # creates windows notification warning user of suspicious cmds being run
