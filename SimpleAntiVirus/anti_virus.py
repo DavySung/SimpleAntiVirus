@@ -174,8 +174,6 @@ class App(customtkinter.CTk):
         
 if __name__ == "__main__":
     cli_monitor = CLIMonitor()
-    subprocess.Popen(["python", "SimpleAntiVirus/CLIMonitor.py"])
-
     app = App()
     app.monitor = cli_monitor  # Pass the CLIMonitor instance to your App instance
     app.mainloop()

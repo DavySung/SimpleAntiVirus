@@ -6,15 +6,24 @@ from plyer import notification
 
 class CLIMonitor:
     def __init__(self):
-        self.active = True
+        self.active = False
+        self.subprocess = None  # Store the subprocess object
         
     def start_monitoring(self):
-        self.active = True
-        self.notify("CLI Monitor Is now active")
+        if not self.active:
+            self.active = True
+            self.notify("CLI Monitor Is now active")
+            self.subprocess = subprocess.Popen(["python", "SimpleAntiVirus/CLIMonitor.py"])
 
     def stop_monitoring(self):
-        self.active = False
-        self.notify("CLI Monitor Is no longer active")
+        if self.active:
+            self.active = False
+            self.notify("CLI Monitor Is no longer active")
+             # Terminate the subprocess to stop your script
+            if self.subprocess:
+                self.subprocess.terminate()
+                self.subprocess.wait()  # Wait for subprocess to finish
+                self.subprocess = None  # Reset the subprocess object
 
     def notify(self, message):
         notification.notify(
