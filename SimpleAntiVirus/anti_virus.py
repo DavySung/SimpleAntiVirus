@@ -1,5 +1,4 @@
 import hashlib
-import subprocess
 from tkinter import *
 import customtkinter
 from filehash import HashFile
