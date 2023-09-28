@@ -163,10 +163,10 @@ class App(customtkinter.CTk):
     def toggle_monitor(self):
     # Toggle the state between On and Off
         if self.toggle_button.cget("text") == "Turn On":
-            self.toggle_button.config(text="Turn Off")
+            self.toggle_button.configure(text="Turn Off")
             # Code to turn on
         else:
-            self.toggle_button.config(text="Turn On")
+            self.toggle_button.configure(text="Turn On")
             # Code to turn off
 
         
