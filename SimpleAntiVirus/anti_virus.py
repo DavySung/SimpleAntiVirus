@@ -164,14 +164,19 @@ class App(customtkinter.CTk):
     # Toggle the state between On and Off
         if self.toggle_button.cget("text") == "Turn On":
             self.toggle_button.configure(text="Turn Off")
+            self.monitor.start_monitoring()
             # Code to turn on
         else:
             self.toggle_button.configure(text="Turn On")
+            self.monitor.stop_monitoring()
             # Code to turn off
 
         
-subprocess.Popen(["python", "SimpleAntiVirus/CLIMonitor.py"])
-app = App()
-app.mainloop()
+if __name__ == "__main__":
+    cli_monitor = CLIMonitor()
+    subprocess.Popen(["python", "SimpleAntiVirus/CLIMonitor.py"])
 
+    app = App()
+    app.monitor = cli_monitor  # Pass the CLIMonitor instance to your App instance
+    app.mainloop()
 
