@@ -7,22 +7,22 @@ from plyer import notification
 class CLIMonitor:
     def __init__(self):
         self.active = True
+        
+    def start_monitoring(self):
+        self.active = True
+        self.notify("CLI Monitor Is now active")
 
-    def notify(self, title, message):
-        if self.active:
-            notification.notify(
-                                title="CLI Monitor",
-                                message="CLI Monitor Is now active",
-                                app_name="SimpleAntivirus",
-                                timeout=10
-                                )
-        else:
-            notification.notify(
-                                title="CLI Monitor",
-                                message="CLI Monitor Is no longer active",
-                                app_name="SimpleAntivirus",
-                                timeout=10
-                                )
+    def stop_monitoring(self):
+        self.active = False
+        self.notify("CLI Monitor Is no longer active")
+
+    def notify(self, message):
+        notification.notify(
+            title="CLI Monitor",
+            message=message,
+            app_name="SimpleAntivirus",
+            timeout=10
+        )
 
     def is_suspicious(self, cmdline):
         # Convert the command line to lowercase for case-insensitive matching
@@ -120,7 +120,8 @@ class CLIMonitor:
 
             # Sleep for a while to reduce CPU usage
             # time.sleep(1)
-            
+
 if __name__ == "__main__":
     cli_monitor = CLIMonitor()  # Create an instance of the CLIMonitor class
+    cli_monitor.start_monitoring()  # Send the initial notification
     cli_monitor.monitor_processes()  # Start monitoring processes
