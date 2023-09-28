@@ -120,3 +120,7 @@ class CLIMonitor:
 
             # Sleep for a while to reduce CPU usage
             # time.sleep(1)
+            
+if __name__ == "__main__":
+    cli_monitor = CLIMonitor()  # Create an instance of the CLIMonitor class
+    cli_monitor.monitor_processes()  # Start monitoring processes
