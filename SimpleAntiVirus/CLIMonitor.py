@@ -4,6 +4,8 @@ import subprocess
 import tkinter as tk
 from plyer import notification
 
+active = True
+
 def is_suspicious(cmdline):
     # Convert the command line to lowercase for case-insensitive matching
     cmdline_lower = cmdline.lower()
@@ -68,7 +70,7 @@ def is_command_or_powershell(process_name):
 # Store the initial list of running command and PowerShell processes
 initial_processes = set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if is_command_or_powershell(p.info['name']))
 
-while True:
+while active:
     # Get the list of currently running command and PowerShell processes
     current_processes = set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if is_command_or_powershell(p.info['name']))
 
