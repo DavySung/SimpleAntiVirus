@@ -3,6 +3,7 @@ import subprocess
 from tkinter import *
 import customtkinter
 from filehash import HashFile
+from CLIMonitor import CLIMonitor
 from tkinter import Label, StringVar, filedialog
 
 
@@ -16,7 +17,7 @@ class App(customtkinter.CTk):
         self.grid_columnconfigure((0,1,2,3,4,5,6), weight=1)
         self.grid_rowconfigure((0, 1,2), weight=1)
 
-        self.button1 = customtkinter.CTkButton(self, text="Monitoring", command=self.button_callback)
+        self.button1 = customtkinter.CTkButton(self, text="Monitoring", command=self.monitoring_window)
         self.button1.grid(row=1, column=1, padx=5, pady=15, sticky="ew")
 
         self.button2 = customtkinter.CTkButton(self, text="File Scan", command=self.button_callback)
@@ -141,6 +142,34 @@ class App(customtkinter.CTk):
 
         self.withdraw()
 
+    def monitoring_window(self):
+        #Opens second window from monitoring button
+        monitoring_window = customtkinter.CTkToplevel(self)
+        monitoring_window.title("Monitoring")
+        monitoring_window.geometry("1000x600")
+        monitoring_window.grid_columnconfigure((0,1,2,3,4,5,6), weight=1)
+        monitoring_window.grid_rowconfigure((0,1,2,3,4,5,6), weight=1)
+
+        #Back to menu button
+        monitoring_backbutton = customtkinter.CTkButton(monitoring_window, text="Go Back", command=self.goBack)
+        monitoring_backbutton.grid(row=4, column=5, padx=5, pady=10, sticky="ew")
+         
+        #Button to turn off monitoring
+        self.toggle_button = customtkinter.CTkButton(monitoring_window, text="Turn Off", command=self.toggle_monitor)
+        self.toggle_button.grid(row=4, column=4, padx=5, pady=10, sticky="ew")
+
+        self.withdraw()
+
+    def toggle_monitor(self):
+    # Toggle the state between On and Off
+        if self.toggle_button.cget("text") == "Turn On":
+            self.toggle_button.config(text="Turn Off")
+            # Code to turn on
+        else:
+            self.toggle_button.config(text="Turn On")
+            # Code to turn off
+
+        
 subprocess.Popen(["python", "SimpleAntiVirus/CLIMonitor.py"])
 app = App()
 app.mainloop()
