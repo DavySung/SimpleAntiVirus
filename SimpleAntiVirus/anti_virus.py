@@ -155,26 +155,30 @@ class App(customtkinter.CTk):
         monitoring_backbutton.grid(row=4, column=5, padx=5, pady=10, sticky="ew")
          
         #Button to turn off monitoring
-        self.toggle_button = customtkinter.CTkButton(monitoring_window, text="Turn Off", command=self.toggle_monitor)
+        self.toggle_button = customtkinter.CTkButton(monitoring_window, text="Turn On", command=self.toggle_monitor)
         self.toggle_button.grid(row=4, column=4, padx=5, pady=10, sticky="ew")
 
         self.withdraw()
 
     def toggle_monitor(self):
+        global CLIMonitorProcess
     # Toggle the state between On and Off
-        if self.toggle_button.cget("text") == "Turn On":
-            self.toggle_button.configure(text="Turn Off")
-            self.monitor.start_monitoring()
+        if CLIMonitorProcess is None:
             # Code to turn on
+            self.toggle_button.configure(text="Turn Off")
+            CLIMonitorProcess = subprocess.Popen(['python', 'SimpleAntiVirus/CLIMonitor.py'])
+            
         else:
+            # Code to turn off
+            CLIMonitorProcess.terminate()
             self.toggle_button.configure(text="Turn On")
             self.monitor.stop_monitoring()
-            # Code to turn off
+            CLIMonitorProcess = None
 
+CLIMonitorProcess = None
         
 if __name__ == "__main__":
     cli_monitor = CLIMonitor()
-    subprocess.Popen(["python", "SimpleAntiVirus/CLIMonitor.py"])
     app = App()
     app.monitor = cli_monitor  # Pass the CLIMonitor instance to your App instance
     app.mainloop()
