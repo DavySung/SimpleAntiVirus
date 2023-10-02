@@ -1,12 +1,19 @@
 import psutil
 import time
-import subprocess
 import tkinter as tk
 from plyer import notification
+import os
+import logging
+
+# Configure logging
+logging.basicConfig(filename='cli_monitor.log', level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s')
 
 class CLIMonitor:
     def __init__(self):
         self.active = True
+        self.suspicious_keywords = ["Invoke-Expression", "Base64", "DownloadString", "/c", "dir", "Get-ChildItem"]
+        self.suspicious_parameters = ["-NoProfile", "-WindowStyle Hidden"]
+        self.contextual_indicators = ["C:\\Temp\\", "Desktop\\"]
         
     def start_monitoring(self):
         self.active = True
@@ -34,10 +41,8 @@ class CLIMonitor:
             malicious_domains = [line.strip() for line in file]
 
         # Suspicious keywords and phrases
-        suspicious_keywords = ["Invoke-Expression", "Base64", "DownloadString", "/c", "dir", "Get-ChildItem"]
-        for keyword in suspicious_keywords:
-            if keyword.lower() in cmdline_lower:
-                return True
+        if any(keyword.lower() in cmdline_lower for keyword in self.suspicious_keywords):
+            return True
 
         # Script block logging indicators
         if '{' in cmdline and '}' in cmdline:
@@ -52,46 +57,43 @@ class CLIMonitor:
             return True
 
         # Detect attempts to hide the command with obfuscation techniques
-        obfuscation_indicators = ["IEX", "Invoke-Expression"]
-        for indicator in obfuscation_indicators:
-            if indicator.lower() in cmdline_lower:
-                return True
+        if any(indicator.lower() in cmdline_lower for indicator in ["iex", "invoke-expression"]):
+            return True
 
         # Network activity (e.g., downloading from suspicious URLs)
-        if "-uri" in cmdline_lower and any(domain in cmdline_lower for domain in malicious_domains):
+        if "-uri" in cmdline_lower and any(domain.lower() in cmdline_lower for domain in malicious_domains):
             return True
 
         # Suspicious parameters or arguments
-        suspicious_parameters = ["-NoProfile", "-WindowStyle Hidden"]
-        for param in suspicious_parameters:
-            if param.lower() in cmdline_lower:
-                return True
+        if any(param.lower() in cmdline_lower for param in self.suspicious_parameters):
+            return True
 
         # Contextual checks (e.g., execution from unusual locations)
-        contextual_indicators = ["C:\\Temp\\", "Desktop\\"]
-        for indicator in contextual_indicators:
-            if indicator.lower() in cmdline_lower:
-                return True
+        if any(indicator.lower() in cmdline_lower for indicator in self.contextual_indicators):
+            return True
 
         # If none of the above criteria match, consider it not suspicious
         return False
 
     # combine list elements into single string
     def combine_list_elements(self, input_list, delimiter=" "):
-        combined_string = delimiter.join(input_list)
-        return combined_string
+        return delimiter.join(input_list)
 
     # Function to check if a process name matches cmd.exe or powershell.exe
     def is_command_or_powershell(self, process_name):
         return process_name.lower() in ["cmd.exe", "powershell.exe"]
+    
+    # Get running command and powershell processes
+    def get_command_and_powershell_processes(self):
+        return set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if self.is_command_or_powershell(p.info['name']))
 
     def monitor_processes(self):
         # Store the initial list of running command and PowerShell processes
-        initial_processes = set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if self.is_command_or_powershell(p.info['name']))
+        initial_processes = self.get_command_and_powershell_processes()
 
         while self.active:
             # Get the list of currently running command and PowerShell processes
-            current_processes = set(p.info['pid'] for p in psutil.process_iter(attrs=['name', 'pid']) if self.is_command_or_powershell(p.info['name']))
+            current_processes = self.get_command_and_powershell_processes()
 
             # Find new processes
             new_processes = current_processes - initial_processes
@@ -106,12 +108,8 @@ class CLIMonitor:
                             title = "New suspicious CLI processes detected:"
                             message = f"Process ID: {pid}, Command: {' '.join(process.cmdline())}"
                             # creates windows notification warning user of suspicious cmds being run
-                            notification.notify(
-                            title=title,
-                            message=message,
-                            app_name="SimpleAntivirus",
-                            timeout=10
-                            )
+                            self.notify(title + "\n" + message)
+                            logging.warning(f"Suspicious process detected - PID: {pid}, Command: {cmd_line}")
                     except psutil.NoSuchProcess:
                         pass
 
