@@ -4,10 +4,13 @@ from tkinter import *
 import customtkinter
 from filehash import HashFile
 from CLIMonitor import CLIMonitor
+from Quarantining import Quarantine
 from tkinter import Label, StringVar, filedialog
 
 
 customtkinter.set_appearance_mode("light")
+
+
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
@@ -26,7 +29,7 @@ class App(customtkinter.CTk):
         self.fileHashBtn = customtkinter.CTkButton(self, text="File Hash", command=self.hashWindow)
         self.fileHashBtn.grid(row=1, column=3, padx=5, pady=10, sticky="ew")
         
-        self.button4 = customtkinter.CTkButton(self, text="Quarantine", command=self.button_callback)
+        self.button4 = customtkinter.CTkButton(self, text="Quarantine", command=self.quarantine_window())
         self.button4.grid(row=1, column=4, padx=5, pady=10, sticky="ew")
         
         self.button5 = customtkinter.CTkButton(self, text="Web Filter", command=self.button_callback)
@@ -175,11 +178,33 @@ class App(customtkinter.CTk):
             self.monitor.stop_monitoring()
             CLIMonitorProcess = None
 
-CLIMonitorProcess = None
+    CLIMonitorProcess = None
+
+    def quarantine_window(self):
+        # Opens second window from monitoring button
+        quarantine_window = customtkinter.CTkToplevel(self)
+        quarantine_window.title("Quarantine")
+        quarantine_window.geometry("1000x600")
+        quarantine_window.grid_columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
+        quarantine_window.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
+
+        # Back to menu button
+        quarantine_backbutton = customtkinter.CTkButton(quarantine_window, text="Go Back", command=self.goBack)
+        quarantine_backbutton.grid(row=3, column=4, padx=5, pady=10, sticky="ew")
+
+        # Buttons to delete or restore file
+        true_button = customtkinter.CTkButton(quarantine_window, text="True", command=set_true)
+        true_button.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
+
+        false_button = customtkinter.CTkButton(quarantine_window, text="false", command=set_false)
+        false_button.grid(row=3, column=4, padx=5, pady=10, sticky="ew")
+
         
 if __name__ == "__main__":
-    cli_monitor = CLIMonitor()
     app = App()
+    cli_monitor = CLIMonitor()
     app.monitor = cli_monitor  # Pass the CLIMonitor instance to your App instance
+    quarantine = Quarantine()
+    app.monitor = Quarantine
     app.mainloop()
 
