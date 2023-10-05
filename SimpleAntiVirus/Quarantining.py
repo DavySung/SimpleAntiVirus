@@ -1,6 +1,8 @@
 import os
 import shutil
 import subprocess
+import tkinter as tk
+from tkinter import messagebox
 
 
 class Quarantine:
@@ -27,8 +29,7 @@ class Quarantine:
         shutil.move(psource_name, pdestname)
 
     def user_select(self):
-        # print("Would you like to remove the file?")
-        choice = input("Would you like to (D)elete or (R)estore?: ")
+        msg_box = tk.messagebox.askquestion(' ', 'Delete identified file?', icon='warning')
 
         with open('Quarantine.txt') as f:
             filename = f.readline()
@@ -36,23 +37,18 @@ class Quarantine:
 
         subprocess.check_output(['icacls.exe', 'Quarantine\\' + filename[0], '/GRANT', 'everyone:(f)'], stderr=subprocess.STDOUT)
 
-        if choice == 'D':
+        if msg_box == 'yes':
             file_path = 'Quarantine\\' + filename[0]
             os.remove(file_path)
             print("Deleted.")
-        elif choice == 'R':
+        else:
+            tk.messagebox.showinfo(' ', 'File will be restored to original location')
             os.chdir('Quarantine')
             path = os.getcwd()
             source_name = path + '\\' + filename[0]
             dest_name = filename[1].rsplit('\\', 1)
-            # dest_name doesn't contain a '\'
-            # E.g. I put the test.txt file directly into my D drive and in debugging, it shows dest_name only containing 'D:'
             os.chdir(dest_name[0].strip())
             self.restore_file(source_name, dest_name[1])
-            print("Restored.")
-
-        else:
-            print("No valid option selected, closing...")
 
 
 if __name__ == '__main__':

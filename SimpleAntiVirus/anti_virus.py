@@ -192,13 +192,6 @@ class App(customtkinter.CTk):
         quarantine_backbutton = customtkinter.CTkButton(quarantine_window, text="Go Back", command=self.goBack)
         quarantine_backbutton.grid(row=3, column=4, padx=5, pady=10, sticky="ew")
 
-        # Buttons to delete or restore file
-        true_button = customtkinter.CTkButton(quarantine_window, text="True", command=set_true)
-        true_button.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
-
-        false_button = customtkinter.CTkButton(quarantine_window, text="false", command=set_false)
-        false_button.grid(row=3, column=4, padx=5, pady=10, sticky="ew")
-
         
 if __name__ == "__main__":
     app = App()
