@@ -13,6 +13,9 @@ customtkinter.set_appearance_mode("light")
 
 
 class App(customtkinter.CTk):
+    global CLIMonitorProcess
+    CLIMonitorProcess = None
+    
     def __init__(self):
         super().__init__()
 
@@ -178,8 +181,6 @@ class App(customtkinter.CTk):
             CLIMonitorProcess.terminate()
             self.monitor.stop_monitoring()
             CLIMonitorProcess = None
-
-    CLIMonitorProcess = None
 
     def quarantine_window(self):
         # Opens second window from quarantine button
