@@ -11,6 +11,7 @@ class Quarantine:
 
     def get_file(self):
         apath = filedialog.askopenfilename()
+        apath = apath.replace("/", "\\")
         if apath:
             self.apath = apath
 
@@ -21,7 +22,7 @@ class Quarantine:
             fdir = apath[0]
             fname = apath[1]
             dir_name = "Quarantine"
-            with open('Quarantine.txt') as f:
+            with open('Quarantine.txt', 'w') as f:
                 f.write(fname + ', ' + fdir)
             shutil.move(fdir + '\\' + fname, dir_name)
             subprocess.check_output(['icacls.exe', dir_name + '\\' + fname, '/deny', 'everyone:(f)'], stderr=subprocess.STDOUT)
