@@ -1,5 +1,6 @@
 import hashlib
 import subprocess
+import tkinter
 from tkinter import *
 import customtkinter
 from filehash import HashFile
@@ -29,7 +30,7 @@ class App(customtkinter.CTk):
         self.fileHashBtn = customtkinter.CTkButton(self, text="File Hash", command=self.hashWindow)
         self.fileHashBtn.grid(row=1, column=3, padx=5, pady=10, sticky="ew")
         
-        self.button4 = customtkinter.CTkButton(self, text="Quarantine", command=self.quarantine_window())
+        self.button4 = customtkinter.CTkButton(self, text="Quarantine", command=self.quarantine_window)
         self.button4.grid(row=1, column=4, padx=5, pady=10, sticky="ew")
         
         self.button5 = customtkinter.CTkButton(self, text="Web Filter", command=self.button_callback)
@@ -181,23 +182,41 @@ class App(customtkinter.CTk):
     CLIMonitorProcess = None
 
     def quarantine_window(self):
-        # Opens second window from monitoring button
+        # Opens second window from quarantine button
         quarantine_window = customtkinter.CTkToplevel(self)
         quarantine_window.title("Quarantine")
         quarantine_window.geometry("1000x600")
         quarantine_window.grid_columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
         quarantine_window.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
 
+        quarantine = Quarantine()
+
+        # Select file for quarantine
+        select_button = customtkinter.CTkButton(quarantine_window, text="Select file", command=quarantine.get_file)
+        select_button.grid(row=2, column=3, padx=5, pady=10, sticky="ew")
+
+        # Puts file into quarantine
+        quarantine_button = customtkinter.CTkButton(quarantine_window, text="Quarantine file", command=quarantine.quarantine_file)
+        quarantine_button.grid(row=2, column=4, padx=5, pady=10, sticky="ew")
+
+        # Restores file to original location
+        restore_button = customtkinter.CTkButton(quarantine_window, text="Restore file", command=quarantine.restore_file)
+        restore_button.grid(row=3, column=3, padx=5, pady=10, sticky="ew")
+
+        # Deletes quarantined file
+        delete_button = customtkinter.CTkButton(quarantine_window, text="Delete file", command=quarantine.delete_file)
+        delete_button.grid(row=3, column=4, padx=5, pady=10, sticky="ew")
+
         # Back to menu button
         quarantine_backbutton = customtkinter.CTkButton(quarantine_window, text="Go Back", command=self.goBack)
-        quarantine_backbutton.grid(row=3, column=4, padx=5, pady=10, sticky="ew")
+        quarantine_backbutton.grid(row=10, column=5, padx=5, pady=10, sticky="ew")
+
+        self.withdraw()
 
         
 if __name__ == "__main__":
     app = App()
     cli_monitor = CLIMonitor()
     app.monitor = cli_monitor  # Pass the CLIMonitor instance to your App instance
-    quarantine = Quarantine()
-    app.monitor = Quarantine
     app.mainloop()
 
