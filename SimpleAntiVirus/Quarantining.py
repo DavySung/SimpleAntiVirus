@@ -16,7 +16,7 @@ class Quarantine:
             self.apath = apath
 
     def quarantine_file(self):
-        if hasattr(self, 'apath'):
+        if self.apath is not None:
             apath = self.apath
             apath = apath.rsplit('\\', 1)
             fdir = apath[0]
@@ -26,26 +26,28 @@ class Quarantine:
                 f.write(fname + ', ' + fdir)
             shutil.move(fdir + '\\' + fname, dir_name)
             subprocess.check_output(['icacls.exe', dir_name + '\\' + fname, '/deny', 'everyone:(f)'], stderr=subprocess.STDOUT)
+            tk.messagebox.showinfo('Quarantine', 'File quarantine successful')
         else:
             tk.messagebox.showerror("Error", "No file selected")
 
     def restore_file(self):
-        with open('Quarantine.txt') as f:
-            filename = f.readline()
-            filename = filename.split(',')
-        subprocess.check_output(['icacls.exe', 'Quarantine\\' + filename[0], '/GRANT', 'everyone:(f)'],
-                                stderr=subprocess.STDOUT)
-        file_path = 'Quarantine\\' + filename[0]
-        if os.path.exists(file_path):
-            question = tk.messagebox.askquestion('Restore', 'Restore the file?', icon='warning')
-            if question == 'yes':
+        if self.apath is not None:
+            with open('Quarantine.txt') as f:
+                filename = f.readline()
+                filename = filename.split(',')
+            file_path = 'Quarantine\\' + filename[0]
+            if os.path.exists(file_path):
+                subprocess.check_output(['icacls.exe', 'Quarantine\\' + filename[0], '/GRANT', 'everyone:(f)'],
+                                            stderr=subprocess.STDOUT)
                 shutil.move(file_path, filename[1].strip())
                 tk.messagebox.showinfo('Restore', 'File restore successful')
             else:
                 tk.messagebox.showerror("Error", "No file found in quarantine")
+        else:
+            tk.messagebox.showerror("Error", "No file selected")
 
     def delete_file(self):
-        if self.apath:
+        if self.apath is not None:
             apath = self.apath
             apath = apath.rsplit('\\', 1)
             fdir = apath[0]
@@ -57,7 +59,7 @@ class Quarantine:
             else:
                 tk.messagebox.showerror("Error", "No file found in quarantine")
         else:
-            tk.messagebox.showerror("Error", "No file selected for deletion")
+            tk.messagebox.showerror("Error", "No file selected")
 
 
 if __name__ == '__main__':

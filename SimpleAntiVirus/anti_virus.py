@@ -190,8 +190,6 @@ class App(customtkinter.CTk):
         quarantine_window.grid_columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
         quarantine_window.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
 
-        quarantine = Quarantine()
-
         # Select file for quarantine
         select_button = customtkinter.CTkButton(quarantine_window, text="Select file", command=quarantine.get_file)
         select_button.grid(row=2, column=3, padx=5, pady=10, sticky="ew")
@@ -219,5 +217,6 @@ if __name__ == "__main__":
     app = App()
     cli_monitor = CLIMonitor()
     app.monitor = cli_monitor  # Pass the CLIMonitor instance to your App instance
+    quarantine = Quarantine()
     app.mainloop()
 
