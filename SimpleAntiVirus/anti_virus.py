@@ -29,7 +29,7 @@ class App(customtkinter.CTk):
         self.button1.grid(row=1, column=1, padx=5, pady=15, sticky="ew")
 
         self.button2 = customtkinter.CTkButton(self, text="File Scan", command=self.malware_scan_window)
-        self.button2.grid(row=1, column=2, padx=5, pady=20, sticky="ew")
+        self.button2.grid(row=1, column=2, padx=5, pady=10, sticky="ew")
 
         self.fileHashBtn = customtkinter.CTkButton(self, text="File Hash", command=self.hashWindow)
         self.fileHashBtn.grid(row=1, column=3, padx=5, pady=10, sticky="ew")
@@ -213,7 +213,9 @@ class App(customtkinter.CTk):
     def open_dialog_quick_scan(self, malScanner):
         filepath = filedialog.askopenfilename()
 
-        malScanner.scan(filepath)
+        result = malScanner.scan(filepath)
+        #resultText.insert(result)
+
 
     def button_full_scan(self, malScanner):
 
@@ -238,6 +240,13 @@ class App(customtkinter.CTk):
 
         mal_scan_full = customtkinter.CTkButton(mal_scan_window, text="Full Scan", command=lambda: self.button_full_scan(MalwareScanner))
         mal_scan_full.grid(row=6, column=1, padx=5, pady=10, sticky="ew")
+
+        resultText = customtkinter.CTkTextbox(mal_scan_window, width=400, corner_radius=0)
+        resultText.grid(row=1, column=1, sticky="nsew")
+
+        #resultText.insert("0.0", "Some example text!\n" * 50)
+
+        self.withdraw()
 
         
 if __name__ == "__main__":
