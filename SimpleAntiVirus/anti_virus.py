@@ -32,9 +32,6 @@ class App(customtkinter.CTk):
         
         self.button4 = customtkinter.CTkButton(self, text="Quarantine", command=self.quarantine_window())
         self.button4.grid(row=1, column=4, padx=5, pady=10, sticky="ew")
-        
-        self.button5 = customtkinter.CTkButton(self, text="Web Filter", command=self.button_callback)
-        self.button5.grid(row=1, column=5, padx=5, pady=10, sticky="ew")
 
     def button_callback(self):
         print("button pressed")
