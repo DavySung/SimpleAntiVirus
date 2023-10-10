@@ -221,11 +221,19 @@ class App(customtkinter.CTk):
         self.withdraw()
 
     def open_dialog_quick_scan(self, malScanner):
-        filepath = filedialog.askopenfilename()
+        filepath = filedialog.askdirectory()
 
         result = malScanner.scan(filepath)
-        #resultText.insert(result)
 
+        result_window = customtkinter.CTk()
+        result_window.title("Check HashFile")
+        result_window.geometry("600x200")
+        result_window.grid_columnconfigure((0,1,2), weight=1)
+        result_window.grid_rowconfigure((0, 1,2), weight=1)
+
+        result_window.label = customtkinter.CTkLabel(result_window, text=result, fg_color="transparent")
+        result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
+        result_window.mainloop()
 
     def button_full_scan(self, malScanner):
 
