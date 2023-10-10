@@ -18,7 +18,7 @@ class HashFile:
         self.fileName = fileName
 
     def hash_file(self, filename, hash_obj):
-        with open(self.fileName, 'rb') as file:
+        with open(filename, 'rb') as file:
             while True:
                 chunk = file.read(4096)
                 if not chunk:
