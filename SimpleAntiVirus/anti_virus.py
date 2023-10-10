@@ -2,6 +2,7 @@ import hashlib
 import subprocess
 import tkinter
 from tkinter import *
+from tkinter import font
 import customtkinter
 from filehash import HashFile
 from CLIMonitor import CLIMonitor
@@ -24,6 +25,11 @@ class App(customtkinter.CTk):
         self.grid_columnconfigure((0,1,2,3,4,5,6), weight=1)
         self.grid_rowconfigure((0, 1,2), weight=1)
 
+        self.titleLabel = customtkinter.CTkLabel(self, text="BAD ANTI VIRUS", width=200,
+                               height=25, font=("Helvetica bold", 30))
+        self.titleLabel.place(relx=0.5, rely=0.2, anchor=tkinter.CENTER)
+        #self.titleLabel.grid(row=0, column=2, padx=5, pady=10, sticky="ew")
+
         self.button1 = customtkinter.CTkButton(self, text="Monitoring", command=self.monitoring_window)
         self.button1.grid(row=1, column=1, padx=5, pady=15, sticky="ew")
 
@@ -35,9 +41,6 @@ class App(customtkinter.CTk):
         
         self.button4 = customtkinter.CTkButton(self, text="Quarantine", command=self.quarantine_window)
         self.button4.grid(row=1, column=4, padx=5, pady=10, sticky="ew")
-        
-        self.button5 = customtkinter.CTkButton(self, text="Web Filter", command=self.button_callback)
-        self.button5.grid(row=1, column=5, padx=5, pady=10, sticky="ew")
 
     def button_callback(self):
         print("button pressed")
@@ -59,7 +62,7 @@ class App(customtkinter.CTk):
             sha1.set(sha1_output)
 
     def hashWindow(self):
-        new_window = customtkinter.CTkToplevel(self)
+        hash_window = customtkinter.CTkToplevel(self)
         file = HashFile()
 
         file1 = StringVar()
@@ -71,81 +74,85 @@ class App(customtkinter.CTk):
         Sha1file1 = StringVar()
         Sha1file2 = StringVar()
 
-        new_window.title("Hash File")
-        new_window.geometry("1000x600")
-        new_window.grid_columnconfigure((0,1,2,3,4,5,6), weight=1)
-        new_window.grid_rowconfigure((0, 1,2,3,4, 5,6,7,8,9, 10), weight=1)
-
+        hash_window.title("Hash File")
+        hash_window.geometry("1200x600")
+        hash_window.grid_columnconfigure((0,1,2,3,4,5,6), weight=1)
+        hash_window.grid_rowconfigure((0, 1,2,3,4, 5,6,7,8,9, 10,11), weight=1)
+        
+        #title
+        hash_window.titleLabel = customtkinter.CTkLabel(hash_window, text="Hash File", width=200,
+                               height=25, font=("Helvetica bold", 30))
+        hash_window.titleLabel.grid(row=0, column=1, padx=5, pady=10, sticky="ew")
         #hashfile1
-        new_window.f1Lbl = customtkinter.CTkLabel(new_window, textvariable=file1, width=100)
-        new_window.f1Lbl.grid(row=0, column=0, padx=5, pady=10, sticky="ew")
-        file1.set("Open File 1 or enter the hash below")
+        hash_window.f1Lbl = customtkinter.CTkLabel(hash_window, textvariable=file1, font=("Helvetica bold", 18))
+        hash_window.f1Lbl.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
+        file1.set("Open File1 to compare, store or check")
 
-        new_window.f1HashLbl3 = customtkinter.CTkLabel(new_window, text="Sha256 : ", width=100)
-        new_window.f1HashLbl3.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
+        hash_window.f1HashLbl3 = customtkinter.CTkLabel(hash_window, text="Sha256 : ", width=100)
+        hash_window.f1HashLbl3.grid(row=2, column=0, padx=5, pady=10, sticky="ew")
 
-        new_window.f1Sha256 = customtkinter.CTkEntry(new_window, textvariable=Sha256file1, width=100)
-        new_window.f1Sha256.grid(row=1, column=1, padx=5, pady=10, sticky="ew")
+        hash_window.f1Sha256 = customtkinter.CTkEntry(hash_window, textvariable=Sha256file1, width=100)
+        hash_window.f1Sha256.grid(row=2, column=1, padx=5, pady=10, sticky="ew")
 
-        new_window.md5LblF1 = customtkinter.CTkLabel(new_window, text="MD5 : ")
-        new_window.md5LblF1.grid(row=2, column=0, padx=5, pady=10, sticky="ew")
+        hash_window.md5LblF1 = customtkinter.CTkLabel(hash_window, text="MD5 : ")
+        hash_window.md5LblF1.grid(row=3, column=0, padx=5, pady=10, sticky="ew")
 
-        new_window.f1MD5 = customtkinter.CTkEntry(new_window, textvariable=MD5file1, width=100)
-        new_window.f1MD5.grid(row=2, column=1, padx=5, pady=10, sticky="ew")
+        hash_window.f1MD5 = customtkinter.CTkEntry(hash_window, textvariable=MD5file1, width=100)
+        hash_window.f1MD5.grid(row=3, column=1, padx=5, pady=10, sticky="ew")
 
-        new_window.sha1LblF1 = customtkinter.CTkLabel(new_window, text="Sha1 : ")
-        new_window.sha1LblF1.grid(row=3, column=0, padx=5, pady=10, sticky="ew")
+        hash_window.sha1LblF1 = customtkinter.CTkLabel(hash_window, text="Sha1 : ")
+        hash_window.sha1LblF1.grid(row=4, column=0, padx=5, pady=10, sticky="ew")
 
-        new_window.f1Sha1 = customtkinter.CTkEntry(new_window, textvariable=Sha1file1, width=100)
-        new_window.f1Sha1.grid(row=3, column=1, padx=5, pady=10, sticky="ew")
+        hash_window.f1Sha1 = customtkinter.CTkEntry(hash_window, textvariable=Sha1file1, width=100)
+        hash_window.f1Sha1.grid(row=4, column=1, padx=5, pady=10, sticky="ew")
 
-        new_window.openF1 = customtkinter.CTkButton(new_window, text="Open File 1", command=lambda: self.open_file_dialog( file1, Sha256file1, MD5file1, Sha1file1))
-        new_window.openF1.grid(row=4, column=3, padx=5, pady=10, sticky="ew")
+        hash_window.openF1 = customtkinter.CTkButton(hash_window, text="Open File 1", command=lambda: self.open_file_dialog( file1, Sha256file1, MD5file1, Sha1file1))
+        hash_window.openF1.grid(row=5, column=3, padx=5, pady=10, sticky="ew")
        
         #hashfile2
-        new_window.f2Lbl = customtkinter.CTkLabel(new_window, textvariable=file2, width=100)
-        new_window.f2Lbl.grid(row=5, column=0, padx=5, pady=10, sticky="ew")
-        file2.set("Open File 2 or enter the hash below")
+        hash_window.f2Lbl = customtkinter.CTkLabel(hash_window, textvariable=file2, width=200,font=("Helvetica bold", 18) )
+        hash_window.f2Lbl.grid(row=6, column=1, padx=5, pady=10, sticky="ew")
+        file2.set("Open File 2 to compare with File1")
 
-        new_window.f2HashLbl3 = customtkinter.CTkLabel(new_window, text="Sha256 : ")
-        new_window.f2HashLbl3.grid(row=6, column=0, padx=5, pady=10, sticky="ew")
+        hash_window.f2HashLbl3 = customtkinter.CTkLabel(hash_window, text="Sha256 : ")
+        hash_window.f2HashLbl3.grid(row=7, column=0, padx=5, pady=10, sticky="ew")
 
-        new_window.f2Sha256 = customtkinter.CTkEntry(new_window, textvariable=Sha256file2, width=100)
-        new_window.f2Sha256.grid(row=6, column=1, padx=5, pady=10, sticky="ew")
+        hash_window.f2Sha256 = customtkinter.CTkEntry(hash_window, textvariable=Sha256file2, width=100)
+        hash_window.f2Sha256.grid(row=7, column=1, padx=5, pady=10, sticky="ew")
 
-        new_window.md5LblF2 = customtkinter.CTkLabel(new_window, text="MD5 : ")
-        new_window.md5LblF2.grid(row=7, column=0, padx=5, pady=10, sticky="ew")
+        hash_window.md5LblF2 = customtkinter.CTkLabel(hash_window, text="MD5 : ")
+        hash_window.md5LblF2.grid(row=8, column=0, padx=5, pady=10, sticky="ew")
 
-        new_window.f2MD5 = customtkinter.CTkEntry(new_window, textvariable=MD5file2, width=100)
-        new_window.f2MD5.grid(row=7, column=1, padx=5, pady=10, sticky="ew")
+        hash_window.f2MD5 = customtkinter.CTkEntry(hash_window, textvariable=MD5file2, width=100)
+        hash_window.f2MD5.grid(row=8, column=1, padx=5, pady=10, sticky="ew")
 
-        new_window.sha1LblF2 = customtkinter.CTkLabel(new_window, text="Sha1 : ")
-        new_window.sha1LblF2.grid(row=8, column=0, padx=5, pady=10, sticky="ew")
+        hash_window.sha1LblF2 = customtkinter.CTkLabel(hash_window, text="Sha1 : ")
+        hash_window.sha1LblF2.grid(row=9, column=0, padx=5, pady=10, sticky="ew")
 
-        new_window.f2Sha1 = customtkinter.CTkEntry(new_window, textvariable=Sha1file2, width=100)
-        new_window.f2Sha1.grid(row=8, column=1, padx=5, pady=10, sticky="ew")
+        hash_window.f2Sha1 = customtkinter.CTkEntry(hash_window, textvariable=Sha1file2, width=100)
+        hash_window.f2Sha1.grid(row=9, column=1, padx=5, pady=10, sticky="ew")
 
-        new_window.openF2 = customtkinter.CTkButton(new_window, text="Open File 2", command=lambda: self.open_file_dialog( file2, Sha256file2, MD5file2, Sha1file2))
-        new_window.openF2.grid(row=9, column=3, padx=5, pady=10, sticky="ew")
+        hash_window.openF2 = customtkinter.CTkButton(hash_window, text="Open File 2", command=lambda: self.open_file_dialog( file2, Sha256file2, MD5file2, Sha1file2))
+        hash_window.openF2.grid(row=10, column=3, padx=5, pady=10, sticky="ew")
        
         #Hash Function
-        new_window.checkHash = customtkinter.CTkButton(new_window, text="Compare Two Hash", command=lambda: file.CheckHash(new_window.f1Sha256.get(),new_window.f2Sha256.get(), new_window.f1MD5.get(),new_window.f2MD5.get(), new_window.f1Sha1.get(),new_window.f2Sha1.get()))
-        new_window.checkHash.grid(row=10, column=0, padx=5, pady=5, sticky="ew")
+        hash_window.checkHash = customtkinter.CTkButton(hash_window, text="Compare Two Hash", command=lambda: file.CheckHashInterface(hash_window.f1Sha256.get(),hash_window.f2Sha256.get(), hash_window.f1MD5.get(),hash_window.f2MD5.get(), hash_window.f1Sha1.get(),hash_window.f2Sha1.get()))
+        hash_window.checkHash.grid(row=11, column=0, padx=5, pady=5, sticky="ew")
 
-        new_window.storeMalicious = customtkinter.CTkButton(new_window, text="Store Malicious", command=lambda: file.StoreFile("malicious_file.txt", new_window.f1Sha256.get()))
-        new_window.storeMalicious.grid(row=10, column=1, padx=5, pady=10, sticky="ew")
+        hash_window.storeMalicious = customtkinter.CTkButton(hash_window, text="Store Malicious", command=lambda: file.StoreFile("malicious_file.txt", hash_window.f1Sha256.get()))
+        hash_window.storeMalicious.grid(row=11, column=1, padx=5, pady=10, sticky="ew")
 
-        new_window.storeTrusted = customtkinter.CTkButton(new_window, text="Store Trusted", command=lambda: file.StoreFile("trusted_file.txt", new_window.f1Sha256.get()))
-        new_window.storeTrusted.grid(row=10, column=2, padx=5, pady=10, sticky="ew")
+        hash_window.storeTrusted = customtkinter.CTkButton(hash_window, text="Store Trusted", command=lambda: file.StoreFile("trusted_file.txt", hash_window.f1Sha256.get()))
+        hash_window.storeTrusted.grid(row=11, column=2, padx=5, pady=10, sticky="ew")
 
-        new_window.checkMalicious = customtkinter.CTkButton(new_window, text="Check Malicious", command=lambda: file.CheckFile("malicious_file.txt", new_window.f1Sha256.get()))
-        new_window.checkMalicious.grid(row=10, column=3, padx=5, pady=10, sticky="ew")
+        hash_window.checkMalicious = customtkinter.CTkButton(hash_window, text="Check Malicious", command=lambda: file.CheckFile("malicious_file.txt", hash_window.f1Sha256.get()))
+        hash_window.checkMalicious.grid(row=11, column=3, padx=5, pady=10, sticky="ew")
 
-        new_window.checkTrusted = customtkinter.CTkButton(new_window, text="Check Trusted", command=lambda: file.CheckFile("trusted_file.txt", new_window.f1Sha256.get()))
-        new_window.checkTrusted.grid(row=10, column=4, padx=5, pady=10, sticky="ew")
+        hash_window.checkTrusted = customtkinter.CTkButton(hash_window, text="Check Trusted", command=lambda: file.CheckFile("trusted_file.txt", hash_window.f1Sha256.get()))
+        hash_window.checkTrusted.grid(row=11, column=4, padx=5, pady=10, sticky="ew")
 
-        new_window.back = customtkinter.CTkButton(new_window, text="Go Back", command=self.goBack)
-        new_window.back.grid(row=10, column=5, padx=5, pady=10, sticky="ew")
+        hash_window.back = customtkinter.CTkButton(hash_window, text="Go Back", command=self.goBack)
+        hash_window.back.grid(row=11, column=5, padx=5, pady=10, sticky="ew")
 
         self.withdraw()
 

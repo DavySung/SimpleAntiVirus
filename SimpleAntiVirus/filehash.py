@@ -28,45 +28,46 @@ class HashFile:
 
     def CheckHash(self, sha256Output1, sha256Output2,md5Output1, md5Output2, sha1Output1, sha1Output2):
         try:
-            result = ""
             flag = False
-            result_window = customtkinter.CTk() 
-            result_window.title("Check HashFile")
-            result_window.geometry("600x200")
-            result_window.grid_columnconfigure((0,1,2), weight=1)
-            result_window.grid_rowconfigure((0, 1,2), weight=1)
             if(sha256Output1 == sha256Output2 and sha1Output1 == sha1Output2 and md5Output1 == md5Output2):
-                result += "All Hash are the same"
                 flag = True
             elif(sha256Output1 == sha256Output2 and sha1Output1 == sha1Output2 ):
-                result += "Sha256Hash and Sha1 are the same"
                 flag = True
             elif(sha256Output1 == sha256Output2 and md5Output1 == md5Output2):
-                result += "Sha256 and MD5 Hash are the same"
                 flag = True
             elif(sha1Output1 == sha1Output2 and md5Output1 == md5Output2):
-                result += "Sha1 and MD5 Hash are the same"
                 flag = True
             elif(sha256Output1 == sha256Output2 ):
-                result += "Sha256 Hash are the same"
                 flag = True
             elif(sha1Output1 == sha1Output2 ):
-                result += "Sha1 Hash are the same"
                 flag = True
             elif(md5Output1 == md5Output2):
-                result += "MD5 Hash are the same"
                 flag = True
             else:
-                result += "All Hash are different"
                 flag = False
-            
-            result_window.label = customtkinter.CTkLabel(result_window, text=result, fg_color="transparent")
-            result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
-            result_window.mainloop()
-
             return flag
         except:
             logging.exception("Exception in check hash")
+            return False
+    
+    def CheckHashInterface(self,sha256Output1, sha256Output2,md5Output1, md5Output2, sha1Output1, sha1Output2):
+        result = ""
+        result_window = customtkinter.CTk() 
+        result_window.title("Check HashFile")
+        result_window.geometry("600x200")
+        result_window.grid_columnconfigure((0,1,2), weight=1)
+        result_window.grid_rowconfigure((0, 1,2), weight=1)
+
+        hash_result = self.CheckHash(sha256Output1, sha256Output2,md5Output1, md5Output2, sha1Output1, sha1Output2)
+
+        if(hash_result == True):
+            result += 'Hash are the same!\n'
+        else:
+            result += 'Hash are different'
+
+        result_window.label = customtkinter.CTkLabel(result_window, text=result, fg_color="transparent")
+        result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
+        result_window.mainloop()
 
     def StoreFile(self, fileName, text):
         try:
@@ -101,7 +102,7 @@ class HashFile:
             result_window.mainloop()
         except:
             logging.exception("Exception in check hash")
-
+    
     def CheckFile(self, fileName, text):
         try:
             result_window = customtkinter.CTk() 
