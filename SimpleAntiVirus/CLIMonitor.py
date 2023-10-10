@@ -28,7 +28,7 @@ class CLIMonitor:
             title="CLI Monitor",
             message=message,
             app_name="SimpleAntivirus",
-            timeout=10
+            timeout=3
         )
 
     def is_suspicious(self, cmdline):
