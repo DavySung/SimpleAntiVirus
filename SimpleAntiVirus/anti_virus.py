@@ -175,12 +175,20 @@ class App(customtkinter.CTk):
         #Button to turn off monitoring
         self.toggle_button = customtkinter.CTkButton(monitoring_window, text="Turn On", command=self.toggle_monitor)
         self.toggle_button.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
+        self.check_state()
 
         #Back to menu button
         monitoring_backbutton = customtkinter.CTkButton(monitoring_window, text="Go Back", command=self.goBack)
         monitoring_backbutton.grid(row=3, column=4, padx=5, pady=10, sticky="ew")
 
         self.withdraw()
+
+    def check_state(self):
+        global CLIMonitorProcess
+        if CLIMonitorProcess is None:
+            self.toggle_button.configure(text="Turn On")
+        else:
+            self.toggle_button.configure(text="Turn Off")
 
     def toggle_monitor(self):
         global CLIMonitorProcess
