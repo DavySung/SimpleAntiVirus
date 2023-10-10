@@ -7,6 +7,7 @@ import customtkinter
 from filehash import HashFile
 from CLIMonitor import CLIMonitor
 from Quarantining import Quarantine
+from malware_scan import MalScan
 from tkinter import Label, StringVar, filedialog
 
 
@@ -33,7 +34,7 @@ class App(customtkinter.CTk):
         self.button1 = customtkinter.CTkButton(self, text="Monitoring", command=self.monitoring_window)
         self.button1.grid(row=1, column=1, padx=5, pady=15, sticky="ew")
 
-        self.button2 = customtkinter.CTkButton(self, text="File Scan", command=self.button_callback)
+        self.button2 = customtkinter.CTkButton(self, text="File Scan", command=self.malware_scan_window)
         self.button2.grid(row=1, column=2, padx=5, pady=20, sticky="ew")
 
         self.fileHashBtn = customtkinter.CTkButton(self, text="File Hash", command=self.hashWindow)
@@ -197,8 +198,6 @@ class App(customtkinter.CTk):
         quarantine_window.grid_columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
         quarantine_window.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
 
-        quarantine = Quarantine()
-
         # Select file for quarantine
         select_button = customtkinter.CTkButton(quarantine_window, text="Select file", command=quarantine.get_file)
         select_button.grid(row=2, column=3, padx=5, pady=10, sticky="ew")
@@ -221,10 +220,40 @@ class App(customtkinter.CTk):
 
         self.withdraw()
 
+    def open_dialog_quick_scan(self, malScanner):
+        filepath = filedialog.askopenfilename()
+
+        malScanner.scan(filepath)
+
+    def button_full_scan(self, malScanner):
+
+        malScanner.full_scan()
+
+
+    def malware_scan_window(self):
+        mal_scan_window = customtkinter.CTkToplevel(self)
+        MalwareScanner = MalScan()
+
+        mal_scan_window.title("Malware Scan")
+        mal_scan_window.geometry("1000x600")
+        mal_scan_window.grid_columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
+        mal_scan_window.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
+
+        # Back to menu button
+        mal_scan_backbutton = customtkinter.CTkButton(mal_scan_window, text="Go Back", command=self.goBack)
+        mal_scan_backbutton.grid(row=6, column=5, padx=5, pady=10, sticky="ew")
+
+        mal_scan_quick = customtkinter.CTkButton(mal_scan_window, text="Quick Scan", command=lambda: self.open_dialog_quick_scan(MalwareScanner))
+        mal_scan_quick.grid(row=6, column=3, padx=5, pady=10, sticky="ew")
+
+        mal_scan_full = customtkinter.CTkButton(mal_scan_window, text="Full Scan", command=lambda: self.button_full_scan(MalwareScanner))
+        mal_scan_full.grid(row=6, column=1, padx=5, pady=10, sticky="ew")
+
         
 if __name__ == "__main__":
     app = App()
     cli_monitor = CLIMonitor()
     app.monitor = cli_monitor  # Pass the CLIMonitor instance to your App instance
+    quarantine = Quarantine()
     app.mainloop()
 
