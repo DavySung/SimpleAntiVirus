@@ -6,10 +6,9 @@ from tkinter import font
 import customtkinter
 from filehash import HashFile
 from CLIMonitor import CLIMonitor
-from Quarantining import Quarantine
+from Quarantining import *
 from malware_scan import MalScan
 from tkinter import Label, StringVar, filedialog
-
 
 customtkinter.set_appearance_mode("light")
 
@@ -17,10 +16,11 @@ customtkinter.set_appearance_mode("light")
 class App(customtkinter.CTk):
     global CLIMonitorProcess
     CLIMonitorProcess = None
-    
+    cli_monitor = None  # Class variable to store CLIMonitor instance
+
     def __init__(self):
         super().__init__()
-
+        
         self.title("Simple Anti Virus")
         self.geometry("1000x600")
         self.grid_columnconfigure((0,1,2,3,4,5,6), weight=1)
@@ -29,7 +29,6 @@ class App(customtkinter.CTk):
         self.titleLabel = customtkinter.CTkLabel(self, text="BAD ANTI VIRUS", width=200,
                                height=25, font=("Helvetica bold", 30))
         self.titleLabel.place(relx=0.5, rely=0.2, anchor=tkinter.CENTER)
-        #self.titleLabel.grid(row=0, column=2, padx=5, pady=10, sticky="ew")
 
         self.button1 = customtkinter.CTkButton(self, text="Monitoring", command=self.monitoring_window)
         self.button1.grid(row=1, column=1, padx=5, pady=15, sticky="ew")
@@ -39,15 +38,18 @@ class App(customtkinter.CTk):
 
         self.fileHashBtn = customtkinter.CTkButton(self, text="File Hash", command=self.hashWindow)
         self.fileHashBtn.grid(row=1, column=3, padx=5, pady=10, sticky="ew")
-        
+
         self.button4 = customtkinter.CTkButton(self, text="Quarantine", command=self.quarantine_window)
         self.button4.grid(row=1, column=4, padx=5, pady=10, sticky="ew")
+        
 
     def button_callback(self):
         print("button pressed")
 
     def goBack(self):
         self.destroy()
+        main_menu_window = App()
+        main_menu_window.mainloop()
 
     def open_file_dialog(self, file_path, sha256, md5, sha1):
         self.filename = filedialog.askopenfilename()
@@ -182,20 +184,22 @@ class App(customtkinter.CTk):
 
     def toggle_monitor(self):
         global CLIMonitorProcess
-    # Toggle the state between On and Off
+
         if CLIMonitorProcess is None:
-            # Code to turn on
             self.toggle_button.configure(text="Turn Off")
+            self.cli_monitor = CLIMonitor()
             CLIMonitorProcess = subprocess.Popen(['python', 'SimpleAntiVirus/CLIMonitor.py'])
-            
         else:
-            # Code to turn off
             self.toggle_button.configure(text="Turn On")
-            CLIMonitorProcess.terminate()
-            self.monitor.stop_monitoring()
+            if self.cli_monitor:
+                self.cli_monitor.stop_monitoring()
+            if CLIMonitorProcess:
+                CLIMonitorProcess.terminate()
             CLIMonitorProcess = None
+            self.cli_monitor = None
 
     def quarantine_window(self):
+        quarantine = Quarantine()
         # Opens second window from quarantine button
         quarantine_window = customtkinter.CTkToplevel(self)
         quarantine_window.title("Quarantine")
@@ -244,7 +248,6 @@ class App(customtkinter.CTk):
 
         malScanner.full_scan()
 
-
     def malware_scan_window(self):
         mal_scan_window = customtkinter.CTkToplevel(self)
         MalwareScanner = MalScan()
@@ -271,11 +274,7 @@ class App(customtkinter.CTk):
 
         self.withdraw()
 
-        
+
 if __name__ == "__main__":
     app = App()
-    cli_monitor = CLIMonitor()
-    app.monitor = cli_monitor  # Pass the CLIMonitor instance to your App instance
-    quarantine = Quarantine()
     app.mainloop()
-
