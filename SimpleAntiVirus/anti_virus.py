@@ -196,7 +196,7 @@ class App(customtkinter.CTk):
         if CLIMonitorProcess is None:
             self.toggle_button.configure(text="Turn Off")
             self.cli_monitor = CLIMonitor()
-            CLIMonitorProcess = subprocess.Popen(['python', 'SimpleAntiVirus/CLIMonitor.py'])
+            CLIMonitorProcess = subprocess.Popen(['python', 'CLIMonitor.py'])
         else:
             self.toggle_button.configure(text="Turn On")
             if self.cli_monitor:
