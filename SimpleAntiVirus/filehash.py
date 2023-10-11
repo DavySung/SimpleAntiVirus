@@ -54,7 +54,7 @@ class HashFile:
         result = ""
         result_window = customtkinter.CTk() 
         result_window.title("Check HashFile")
-        result_window.geometry("600x200")
+        result_window.geometry("400x200")
         result_window.grid_columnconfigure((0,1,2), weight=1)
         result_window.grid_rowconfigure((0, 1,2), weight=1)
 
@@ -69,45 +69,84 @@ class HashFile:
         result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
         result_window.mainloop()
 
+    def StoreFileFunction(self, fileName, text):
+        try:
+            flag = False
+            fileName1 = 'malicious_file.txt'
+            fileName2 = 'trusted_file.txt'
+            file_result = self.CheckFileFunction(fileName1, fileName2,text)
+            print(file_result)
+            with open(fileName, "a+") as file:
+                if(file_result == True):
+                    flag = False
+                else:
+                    if(os.stat(fileName).st_size == 0):
+                        file.write(text)
+                        file.write("\n")
+                        flag = True
+                    else:
+                        with open(fileName, "r") as file1:
+                            Lines = file1.readlines()
+                            for line in Lines:
+                                if(text == line.strip()):
+                                    flag = False
+                                    break
+                                else:
+                                    file.write(text)
+                                    file.write("\n")
+                                    flag = True
+                                    break
+                return flag
+        except:
+            logging.exception("Exception in check hash")
+            return False
+
     def StoreFile(self, fileName, text):
         try:
             result_window = customtkinter.CTk() 
             result_window.title("Store HashFile")
-            result_window.geometry("600x200")
+            result_window.geometry("400x200")
             result_window.grid_columnconfigure((0,1,2), weight=1)
             result_window.grid_rowconfigure((0, 1,2), weight=1)
-            flag = False
             msg = ''
-            with open(fileName, "a+") as file:
-                if(os.stat(fileName).st_size == 0):
-                    file.write(text)
-                    file.write("\n")
-                    msg += 'File is stored'
-                else:
-                    with open(fileName, "r") as file1:
-                        Lines = file1.readlines()
-                        for line in Lines:
-                            if(text == line.strip()):
-                                msg += 'File existed'
-                                flag = False
-                                break
-                            else:
-                                flag = True
-                        if(flag == True):
-                            file.write(text)
-                            file.write("\n")
-                            msg += 'File is stored'
+            result = self.StoreFileFunction(fileName, text)
+            if(result == True):
+                msg += 'File is stored successfully'
+            else:
+                msg += 'Cannot Store File\n\nFile existed'
+
             result_window.label = customtkinter.CTkLabel(result_window, text=msg, fg_color="transparent")
             result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
             result_window.mainloop()
         except:
             logging.exception("Exception in check hash")
-    
+
+    #Check if file exist in both malicious and trusted file
+    def CheckFileFunction(self,fileName1, fileName2 ,text):
+        flag = False
+        with open(fileName1, "r") as file1:
+                Lines = file1.readlines()
+                for line in Lines:
+                    if(text == line.strip()):
+                        flag = True
+                    else: 
+                        flag = False
+                if(flag == False):
+                    with open(fileName2, "r") as file2:
+                        lines2 = file2.readlines()
+                        for line in lines2:
+                            if(text == line.strip()):
+                                flag = True
+                            else: 
+                                flag = False
+                return flag
+
+
     def CheckFile(self, fileName, text):
         try:
             result_window = customtkinter.CTk() 
             result_window.title("Check File")
-            result_window.geometry("600x200")
+            result_window.geometry("400x200")
             result_window.grid_columnconfigure((0,1,2), weight=1)
             result_window.grid_rowconfigure((0, 1,2), weight=1)
             flag = False
@@ -118,10 +157,10 @@ class HashFile:
                     if(text == line.strip()):
                         if(fileName == "malicious_file.txt"):
                             flag = True
-                            output += 'File is corrupted'
+                            output += 'It is a corrupted file'
                             break
                         if(fileName == "trusted_file.txt"):
-                            output += 'File is trusted'
+                            output += 'It is a trusted file'
                             flag = True
                             break
                     else: 
