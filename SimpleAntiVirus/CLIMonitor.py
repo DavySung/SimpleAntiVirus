@@ -36,7 +36,7 @@ class CLIMonitor:
         cmdline_lower = cmdline.lower()
 
         # Scans in known malicious domains into array
-        known_mal_domains = "SimpleAntiVirus/scan_known_malware/malicious_domains.txt"
+        known_mal_domains = "scan_known_malware/malicious_domains.txt"
         with open(known_mal_domains, 'r') as file:
             malicious_domains = [line.strip() for line in file]
 
