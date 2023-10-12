@@ -18,15 +18,6 @@ class HashFile:
         self.fileName = fileName
 
     def hash_file(self, filename, hash_obj):
-<<<<<<< Updated upstream
-        with open(filename, 'rb') as file:
-            while True:
-                chunk = file.read(4096)
-                if not chunk:
-                    break
-                hash_obj.update(chunk)
-        return hash_obj.hexdigest()
-=======
         try:
             with open(filename, 'rb') as file:
                 while True:
@@ -43,7 +34,6 @@ class HashFile:
             # suspect is temporary files that no longer exist when the scan function gets around to scanning it
             # 
             return ""
->>>>>>> Stashed changes
 
     def CheckHash(self, sha256Output1, sha256Output2,md5Output1, md5Output2, sha1Output1, sha1Output2):
         try:
