@@ -239,23 +239,9 @@ class App(customtkinter.CTk):
 
     def open_dialog_quick_scan(self, malScanner):
         filepath = filedialog.askdirectory()
-
-        result = malScanner.scan(filepath)
-
-        result_window = customtkinter.CTk()
-        result_window.title("Check HashFile")
-        result_window.geometry("600x200")
-        result_window.grid_columnconfigure((0,1,2), weight=1)
-        result_window.grid_rowconfigure((0, 1,2), weight=1)
-
-        result_window.label = customtkinter.CTkLabel(result_window, text=result, fg_color="transparent")
-        result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
-        result_window.mainloop()
-
+        malScanner.scan(filepath)
     def button_full_scan(self, malScanner):
-
         malScanner.full_scan()
-
     def malware_scan_window(self):
         mal_scan_window = customtkinter.CTkToplevel(self)
         MalwareScanner = MalScan()
@@ -265,20 +251,22 @@ class App(customtkinter.CTk):
         mal_scan_window.grid_columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
         mal_scan_window.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
 
+        # Title
+        mal_scan_window.titleLabel = customtkinter.CTkLabel(mal_scan_window, text="Virus Scan", width=200,
+                               height=25, font=("Helvetica bold", 30))
+        mal_scan_window.titleLabel.place(relx=0.5, rely=0.2, anchor=tkinter.CENTER)
+
         # Back to menu button
         mal_scan_backbutton = customtkinter.CTkButton(mal_scan_window, text="Go Back", command=self.goBack)
-        mal_scan_backbutton.grid(row=6, column=5, padx=5, pady=10, sticky="ew")
+        mal_scan_backbutton.grid(row=4, column=5, padx=5, pady=10, sticky="ew")
 
+        # Quick Scan Button
         mal_scan_quick = customtkinter.CTkButton(mal_scan_window, text="Quick Scan", command=lambda: self.open_dialog_quick_scan(MalwareScanner))
-        mal_scan_quick.grid(row=6, column=3, padx=5, pady=10, sticky="ew")
+        mal_scan_quick.grid(row=4, column=3, padx=5, pady=10, sticky="ew")
 
+        # Full Scan Button
         mal_scan_full = customtkinter.CTkButton(mal_scan_window, text="Full Scan", command=lambda: self.button_full_scan(MalwareScanner))
-        mal_scan_full.grid(row=6, column=1, padx=5, pady=10, sticky="ew")
-
-        resultText = customtkinter.CTkTextbox(mal_scan_window, width=400, corner_radius=0)
-        resultText.grid(row=1, column=1, sticky="nsew")
-
-        #resultText.insert("0.0", "Some example text!\n" * 50)
+        mal_scan_full.grid(row=4, column=1, padx=5, pady=10, sticky="ew")
 
         self.withdraw()
 
