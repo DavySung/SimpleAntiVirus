@@ -28,6 +28,9 @@ class HashFile:
             return hash_obj.hexdigest()
         except PermissionError:
             return ""
+        except FileNotFoundError:
+            return ""
+
 
     def CheckHash(self, sha256Output1, sha256Output2,md5Output1, md5Output2, sha1Output1, sha1Output2):
         try:
