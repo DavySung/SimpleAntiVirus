@@ -239,7 +239,9 @@ class App(customtkinter.CTk):
 
     def open_dialog_quick_scan(self, malScanner):
         filepath = filedialog.askdirectory()
-        malScanner.scan(filepath)
+        results = malScanner.scan(filepath)
+
+        tk.messagebox.showinfo('Result', results)
     def button_full_scan(self, malScanner):
         malScanner.full_scan()
     def malware_scan_window(self):
