@@ -244,6 +244,7 @@ class App(customtkinter.CTk):
         tk.messagebox.showinfo('Result', results)
     def button_full_scan(self, malScanner):
         malScanner.full_scan()
+        tk.messagebox.showinfo('Result', results)
     def malware_scan_window(self):
         mal_scan_window = customtkinter.CTkToplevel(self)
         MalwareScanner = MalScan()
