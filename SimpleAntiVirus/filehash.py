@@ -1,6 +1,7 @@
 import hashlib
 import logging
 import os
+import tkinter
 import customtkinter
 # HashedFile: HashLib
 # Hash(FilePath: string)
@@ -18,20 +19,15 @@ class HashFile:
         self.fileName = fileName
 
     def hash_file(self, filename, hash_obj):
-        try:
-            with open(filename, 'rb') as file:
-                while True:
-                    chunk = file.read(4096)
-                    if not chunk:
-                        break
-                    hash_obj.update(chunk)
-            return hash_obj.hexdigest()
-        except PermissionError:
-            return ""
-        except FileNotFoundError:
-            return ""
+        with open(filename, 'rb') as file:
+            while True:
+                chunk = file.read(4096)
+                if not chunk:
+                    break
+                hash_obj.update(chunk)
+        return hash_obj.hexdigest()
 
-
+    #Compare all hash together
     def CheckHash(self, sha256Output1, sha256Output2,md5Output1, md5Output2, sha1Output1, sha1Output2):
         try:
             flag = False
@@ -56,25 +52,24 @@ class HashFile:
             logging.exception("Exception in check hash")
             return False
     
+    #Checking hash individually
+    def CheckOneHash(self, hash1, hash2):
+        if(hash1 == hash2):
+            return True
+        else:
+            return False
+
+    #Checkhash User Interface
     def CheckHashInterface(self,sha256Output1, sha256Output2,md5Output1, md5Output2, sha1Output1, sha1Output2):
-        result = ""
-        result_window = customtkinter.CTk() 
-        result_window.title("Check HashFile")
-        result_window.geometry("400x200")
-        result_window.grid_columnconfigure((0,1,2), weight=1)
-        result_window.grid_rowconfigure((0, 1,2), weight=1)
 
         hash_result = self.CheckHash(sha256Output1, sha256Output2,md5Output1, md5Output2, sha1Output1, sha1Output2)
 
         if(hash_result == True):
-            result += 'Hash are the same!\n'
+            tkinter.messagebox.showinfo('Hash File', 'Hash format are the same')
         else:
-            result += 'Hash are different'
+            tkinter.messagebox.showerror('Hash File', 'Hash format are different')
 
-        result_window.label = customtkinter.CTkLabel(result_window, text=result, fg_color="transparent")
-        result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
-        result_window.mainloop()
-
+    #Store hash in local file
     def StoreFileFunction(self, fileName, text):
         try:
             flag = False
@@ -107,23 +102,14 @@ class HashFile:
             logging.exception("Exception in check hash")
             return False
 
+    #Store hash in local file with user interface
     def StoreFile(self, fileName, text):
         try:
-            result_window = customtkinter.CTk() 
-            result_window.title("Store HashFile")
-            result_window.geometry("400x200")
-            result_window.grid_columnconfigure((0,1,2), weight=1)
-            result_window.grid_rowconfigure((0, 1,2), weight=1)
-            msg = ''
             result = self.StoreFileFunction(fileName, text)
             if(result == True):
-                msg += 'File is stored successfully'
+                tkinter.messagebox.showinfo('Hash File', 'File is stored successfully')
             else:
-                msg += 'Cannot Store File\n\nFile existed'
-
-            result_window.label = customtkinter.CTkLabel(result_window, text=msg, fg_color="transparent")
-            result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
-            result_window.mainloop()
+                tkinter.messagebox.showerror('Hash File', 'Cannot Store File\n\nFile existed')
         except:
             logging.exception("Exception in check hash")
 
@@ -148,34 +134,27 @@ class HashFile:
                 return flag
 
 
+    #Check hash in local file with user interface
     def CheckFile(self, fileName, text):
         try:
-            result_window = customtkinter.CTk() 
-            result_window.title("Check File")
-            result_window.geometry("400x200")
-            result_window.grid_columnconfigure((0,1,2), weight=1)
-            result_window.grid_rowconfigure((0, 1,2), weight=1)
             flag = False
-            output = ''
             with open(fileName, "r") as file1:
                 Lines = file1.readlines()
                 for line in Lines:
                     if(text == line.strip()):
                         if(fileName == "malicious_file.txt"):
                             flag = True
-                            output += 'It is a corrupted file'
+                            tkinter.messagebox.showinfo('Check File', 'It is a corrupted file')
+                         
                             break
                         if(fileName == "trusted_file.txt"):
-                            output += 'It is a trusted file'
+                            tkinter.messagebox.showinfo('Check File', 'It is a trusted file')
+                          
                             flag = True
                             break
                     else: 
                         flag = False
                 if(flag == False):
-                    output += "File not found"
-
-            result_window.label = customtkinter.CTkLabel(result_window, text=output, fg_color="transparent")
-            result_window.label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
-            result_window.mainloop()
+                    tkinter.messagebox.showerror('Check File', 'File not found')
         except:
             logging.exception("Exception in check hash")
