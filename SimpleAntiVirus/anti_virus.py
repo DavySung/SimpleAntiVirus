@@ -1,6 +1,7 @@
 import hashlib
 import subprocess
 import tkinter
+import tkinter.messagebox
 from tkinter import *
 from tkinter import font
 import customtkinter
@@ -247,9 +248,13 @@ class App(customtkinter.CTk):
 
     def open_dialog_quick_scan(self, malScanner):
         filepath = filedialog.askdirectory()
-        malScanner.scan(filepath)
+        result = malScanner.scan(filepath)
+        tkinter.messagebox.showinfo("Scan Results", result)
+
     def button_full_scan(self, malScanner):
-        malScanner.full_scan()
+        result = ""
+        result += malScanner.full_scan()
+        tkinter.messagebox.showinfo("Scan Results", result)
     def malware_scan_window(self):
         mal_scan_window = customtkinter.CTkToplevel(self)
         MalwareScanner = MalScan()
